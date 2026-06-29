@@ -1,0 +1,74 @@
+# Depression Companion Configuration
+# All paths are relative to project root
+
+model:
+  # Audio processing
+  audio:
+    sample_rate: 16000
+    max_duration: 30.0  # seconds
+    feature_type: "wav2vec2"  # Options: wav2vec2, hubert, whisper
+    pretrained_model: "facebook/wav2vec2-base-960h"
+    
+  # Text processing  
+  text:
+    max_length: 512
+    feature_type: "bert"  # Options: bert, roberta, mental-bert
+    pretrained_model: "bert-base-uncased"
+    
+  # Training
+  training:
+    batch_size: 16
+    learning_rate: 2.0e-5
+    num_epochs: 10
+    warmup_steps: 500
+    weight_decay: 0.01
+    gradient_accumulation_steps: 2
+    max_grad_norm: 1.0
+    
+  # Evaluation
+  evaluation:
+    metrics: ["accuracy", "f1", "auc", "mae", "rmse"]
+    cv_folds: 5
+    test_split: 0.2
+    random_seed: 42
+
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  datasets:
+    daic_woz:
+      path: "data/raw/daic_woz"
+      format: "csv"
+    reddit_depression:
+      path: "data/raw/reddit_depression"
+      format: "jsonl"
+    esconv:
+      path: "data/raw/esconv"
+      format: "json"
+
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} | {message}"
+  rotation: "10 MB"
+  retention: "30 days"
+  file: "logs/depression_companion.log"
+
+monitoring:
+  mlflow:
+    tracking_uri: "mlruns"
+    experiment_name: "depression_companion"
+  wandb:
+    project: "depression-companion"
+    entity: null  # Set your wandb username
+    enabled: false
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["http://localhost:3000"]
+  rate_limit: 100  # requests per minute
+  
+security:
+  max_file_size: 10MB  # audio upload limit
+  allowed_extensions: [".wav", ".mp3", ".flac"]
+  data_retention_days: 30
