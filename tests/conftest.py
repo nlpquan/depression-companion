@@ -87,13 +87,13 @@ def sample_audio() -> np.ndarray:
 def sample_audio_file(sample_audio: np.ndarray) -> Generator[Path, None, None]:
     """Create a temporary WAV file with synthetic audio."""
     import soundfile as sf
-    
+
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
         sf.write(tmp.name, sample_audio, 16000)
         tmp_path = Path(tmp.name)
-    
+
     yield tmp_path
-    
+
     # Cleanup
     if tmp_path.exists():
         os.unlink(tmp_path)

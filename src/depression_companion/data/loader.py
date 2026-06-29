@@ -12,9 +12,9 @@ from depression_companion.exceptions import DataLoadError
 
 class DataLoader:
     """Unified data loader supporting multiple formats."""
-    
+
     SUPPORTED_FORMATS = {"csv", "json", "jsonl", "parquet"}
-    
+
     @staticmethod
     def load(
         path: Union[str, Path],
@@ -22,35 +22,35 @@ class DataLoader:
         **kwargs: Any,
     ) -> pd.DataFrame:
         """Load data from file into DataFrame.
-        
+
         Args:
             path: Path to data file.
             format: File format. Auto-detected if None.
             **kwargs: Additional arguments passed to pandas loader.
-            
+
         Returns:
             DataFrame with loaded data.
-            
+
         Raises:
             DataLoadError: If file not found or format unsupported.
         """
         path = Path(path)
-        
+
         if not path.exists():
             raise DataLoadError(f"File not found: {path}")
-        
+
         # Auto-detect format
         if format is None:
             format = path.suffix.lstrip(".")
-        
+
         if format not in DataLoader.SUPPORTED_FORMATS:
             raise DataLoadError(
                 f"Unsupported format: {format}. "
                 f"Supported: {DataLoader.SUPPORTED_FORMATS}"
             )
-        
+
         logger.info(f"Loading {format} file: {path}")
-        
+
         try:
             if format == "csv":
                 return pd.read_csv(path, **kwargs)
@@ -67,7 +67,7 @@ class DataLoader:
                 return pd.read_parquet(path, **kwargs)
         except Exception as e:
             raise DataLoadError(f"Failed to load {path}: {str(e)}")
-    
+
     @staticmethod
     def save(
         df: pd.DataFrame,
@@ -76,7 +76,7 @@ class DataLoader:
         **kwargs: Any,
     ) -> None:
         """Save DataFrame to file.
-        
+
         Args:
             df: DataFrame to save.
             path: Output path.
@@ -85,12 +85,12 @@ class DataLoader:
         """
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         if format is None:
             format = path.suffix.lstrip(".")
-        
+
         logger.info(f"Saving {format} file: {path}")
-        
+
         if format == "csv":
             df.to_csv(path, index=False, **kwargs)
         elif format == "json":
