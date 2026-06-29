@@ -1,6 +1,5 @@
 """File and path utility functions with Windows compatibility."""
 
-import os
 from pathlib import Path
 from typing import Optional, Union
 

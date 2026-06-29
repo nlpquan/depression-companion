@@ -1,7 +1,7 @@
 """Text processing pipeline for feature extraction."""
 
 import time
-from typing import Optional
+from typing import Any, Optional
 
 import numpy as np
 import torch
@@ -35,7 +35,7 @@ class TextProcessor(BaseProcessor[str, TextFeatures]):
         self.model_name = config.pretrained_model
 
         # Initialize tokenizer (model loaded lazily for memory efficiency)
-        self._tokenizer: Optional[AutoTokenizer] = None
+        self._tokenizer: Any = None  # type: ignore[assignment]
         self._model = None
 
     def initialize(self) -> None:

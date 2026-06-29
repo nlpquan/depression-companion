@@ -1,6 +1,7 @@
 """Evaluation metrics for depression detection models."""
 
 import numpy as np
+from typing import Optional
 from sklearn.metrics import (
     accuracy_score,
     f1_score,

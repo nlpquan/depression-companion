@@ -7,7 +7,6 @@ from typing import Optional, Union
 import librosa
 import numpy as np
 import torch
-import torchaudio
 from loguru import logger
 
 from depression_companion.config import AudioConfig
@@ -66,33 +65,34 @@ class AudioProcessor(BaseProcessor[Union[str, Path, np.ndarray], AudioFeatures])
         return True
 
     def load_audio(
-        self, input_data: Union[str, Path, np.ndarray]
-    ) -> tuple[np.ndarray, int]:
-        """Load audio and resample to target sample rate.
+            self, input_data: Union[str, Path, np.ndarray]
+        ) -> tuple[np.ndarray, int]:
+            """Load audio and resample to target sample rate.
 
-        Args:
-            input_data: Audio file path or numpy array.
+            Args:
+                input_data: Audio file path or numpy array.
 
-        Returns:
-            Tuple of (audio_array, sample_rate).
-        """
-        if isinstance(input_data, np.ndarray):
-            audio = input_data
-            if audio.ndim == 2:
-                audio = audio.mean(axis=0)  # Convert stereo to mono
-            sr = self.sample_rate  # Assume array is already at target rate
-        else:
-            audio, sr = librosa.load(
-                str(input_data),
-                sr=self.sample_rate,
-                mono=True,
-                duration=self.max_duration,
-            )
+            Returns:
+                Tuple of (audio_array, sample_rate).
+            """
+            if isinstance(input_data, np.ndarray):
+                audio = input_data
+                if audio.ndim == 2:
+                    audio = np.mean(audio, axis=0)  # Convert stereo to mono
+                sr = int(self.sample_rate) 
+            else:
+                audio, sr = librosa.load(
+                    str(input_data),
+                    sr=self.sample_rate,
+                    mono=True,
+                    duration=self.max_duration,
+                )
+                sr = int(sr)  # Cast librosa's output to int
 
-        # Trim silence
-        audio, _ = librosa.effects.trim(audio, top_db=20)
+            # Trim silence
+            audio, _ = librosa.effects.trim(audio, top_db=20)
 
-        return audio, self.sample_rate
+            return audio, sr 
 
     def process(self, input_data: Union[str, Path, np.ndarray]) -> AudioFeatures:
         """Extract audio features from input.

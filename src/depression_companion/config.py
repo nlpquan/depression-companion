@@ -1,10 +1,10 @@
 """Configuration management using Pydantic and YAML."""
 
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional
 
 import yaml
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ---- Model Configs ----
