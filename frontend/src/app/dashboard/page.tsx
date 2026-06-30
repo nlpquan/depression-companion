@@ -6,6 +6,8 @@ import JournalEditor from '@/components/JournalEditor';
 import AudioRecorder from '@/components/AudioRecorder';
 import RiskIndicator from '@/components/RiskIndicator';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'journal' | 'voice' | 'forecast'>('journal');
   const [analysis, setAnalysis] = useState<any>(null);
@@ -14,7 +16,7 @@ export default function Dashboard() {
   const analyzeText = async (text: string) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/v1/analyze/text', {
+      const response = await fetch('${API_URL}/api/v1/analyze/text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),
