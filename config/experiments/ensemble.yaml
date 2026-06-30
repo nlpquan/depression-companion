@@ -1,0 +1,16 @@
+# Experiment: Multimodal ensemble combining audio and text
+
+experiment:
+  name: "multimodal_ensemble"
+  description: "Ensemble Wav2Vec2 + BERT for depression detection"
+  seed: 42
+
+model:
+  audio_checkpoint: "checkpoints/wav2vec2_daic_depression/best_model.pt"
+  text_checkpoint: "checkpoints/bert_reddit_depression/best_model.pt"
+  fusion_method: "weighted"  # Options: average, weighted, learnable
+  num_classes: 2
+
+evaluation:
+  metrics: ["accuracy", "f1", "auc", "precision", "recall"]
+  ablation_study: true  # Compare audio-only, text-only, ensemble

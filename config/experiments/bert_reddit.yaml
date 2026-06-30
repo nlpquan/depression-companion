@@ -1,0 +1,46 @@
+# Experiment: Fine-tune BERT on Reddit mental health data
+
+experiment:
+  name: "bert_reddit_depression"
+  description: "Fine-tune BERT-Base on Reddit mental health posts"
+  seed: 42
+
+model:
+  pretrained_model: "bert-base-uncased"
+  num_classes: 2  # Depression vs Control
+  hidden_dim: 256
+  dropout: 0.3
+  freeze_encoder: false
+
+data:
+  dataset: "reddit_depression"
+  split_method: "time_based"  # Reddit has timestamps
+  test_size: 0.2
+  val_size: 0.15
+  max_length: 128      # was 512 (4x shorter sequences)
+  augment: false  # No text augmentation for now
+  min_text_length: 50  # Filter very short posts
+
+training:
+  # In bert_reddit.yaml
+training:
+  num_epochs: 1  # was 5
+  batch_size: 8  # was 16, fewer batches
+  learning_rate: 2.0e-5
+  warmup_steps: 500
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  
+  loss:
+    type: "cross_entropy"
+    class_weights: true
+    
+  scheduler:
+    type: "linear_with_warmup"
+    warmup_steps: 500
+    total_steps: null  # Computed automatically
+
+evaluation:
+  metrics: ["accuracy", "f1", "auc", "precision", "recall"]
+  save_predictions: true

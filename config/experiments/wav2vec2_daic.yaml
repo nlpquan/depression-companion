@@ -1,0 +1,48 @@
+# Experiment: Fine-tune Wav2Vec2 on DAIC-WOZ depression dataset
+
+experiment:
+  name: "wav2vec2_daic_depression"
+  description: "Fine-tune Wav2Vec2-Base on DAIC-WOZ clinical interviews"
+  seed: 42
+
+model:
+  pretrained_model: "facebook/wav2vec2-base"
+  num_classes: 2  # Depression vs No Depression (PHQ-8 >= 10)
+  hidden_dim: 256
+  dropout: 0.3
+  freeze_encoder: false  # Fine-tune full model
+
+data:
+  dataset: "daic_woz"
+  split_method: "stratified"  # Options: stratified, time_based
+  test_size: 0.2
+  val_size: 0.15
+  max_duration: 5.0  # was 30.0, 6x faster
+  sample_rate: 16000
+  augment: true
+  label_threshold: 10  # PHQ-8 >= 10 = depression
+
+training:
+  batch_size: 8
+  num_epochs: 10
+  learning_rate: 1.0e-4
+  warmup_steps: 100
+  weight_decay: 0.01
+  gradient_accumulation_steps: 2
+  max_grad_norm: 1.0
+  
+  # Loss configuration
+  loss:
+    type: "cross_entropy"
+    class_weights: true  # Handle class imbalance
+    
+  # Scheduler
+  scheduler:
+    type: "reduce_on_plateau"
+    factor: 0.5
+    patience: 2
+    min_lr: 1.0e-6
+
+evaluation:
+  metrics: ["accuracy", "f1", "auc", "precision", "recall"]
+  save_predictions: true

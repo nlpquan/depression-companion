@@ -1,0 +1,14 @@
+# Activate environment
+.\venv\Scripts\Activate.ps1
+
+# Generate synthetic datasets for development
+python scripts/download_datasets.py --datasets all
+
+# Run new tests
+pytest tests/unit/test_dataset.py tests/unit/test_audio_model.py tests/unit/test_text_model.py tests/unit/test_ensemble.py -v
+
+# Train audio model (with synthetic data)
+python scripts/train_models.py --model audio --config config/experiments/wav2vec2_daic.yaml
+
+# Train text model
+python scripts/train_models.py --model text --config config/experiments/bert_reddit.yaml
