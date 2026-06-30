@@ -57,6 +57,9 @@ jobs:
             --cov=src/depression_companion \
             --cov-report=xml \
             --cov-report=term-missing
+            --cov=src/depression_companion/config.py \
+            --cov-report=xml \
+            --cov-report=term-missing
 
       - name: Lint with ruff
         run: ruff check src/ tests/ --ignore=F401
