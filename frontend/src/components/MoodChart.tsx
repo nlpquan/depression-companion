@@ -15,9 +15,10 @@ import {
 
 export default function MoodChart() {
   const [forecast, setForecast] = useState<any>(null);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   useEffect(() => {
-    fetch('/api/v1/forecast/demo-user')
+    fetch(`${API_URL}/api/v1/forecast/demo-user`)
       .then((res) => res.json())
       .then(setForecast)
       .catch(console.error);

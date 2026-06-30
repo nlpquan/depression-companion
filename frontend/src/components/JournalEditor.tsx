@@ -17,9 +17,23 @@ export default function JournalEditor({ onAnalyze, loading }: Props) {
     setWordCount(value.trim() ? value.trim().split(/\s+/).length : 0);
   };
 
-  const handleAnalyze = () => {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+  const handleAnalyze = async () => {
     if (text.trim()) {
       onAnalyze(text);
+      // Also call the API directly
+      try {
+        const res = await fetch(`${API_URL}/api/v1/analyze/text`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+        });
+        const data = await res.json();
+        console.log('Analysis:', data);
+      } catch (err) {
+        console.error('API error:', err);
+      }
     }
   };
 
