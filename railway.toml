@@ -1,0 +1,13 @@
+[build]
+builder = "nixpacks"
+buildCommand = "pip install -e ."
+
+[deploy]
+startCommand = "uvicorn depression_companion.api.main:app --host 0.0.0.0 --port $PORT"
+restartPolicyType = "ON_FAILURE"
+
+[service]
+port = 8000
+
+[env]
+DEPRESSION_COMPANION_ENVIRONMENT = "production"

@@ -1,0 +1,17 @@
+.\venv\Scripts\Activate.ps1
+
+# Install FastAPI
+pip install fastapi uvicorn python-multipart
+
+# Run API tests
+pytest tests/unit/test_api.py -v
+
+# Start API server
+uvicorn depression_companion.api.main:app --reload --host 0.0.0.0 --port 8000
+
+# In another terminal - test endpoints
+curl http://localhost:8000/api/v1/health
+curl -X POST http://localhost:8000/api/v1/analyze/text -H "Content-Type: application/json" -d '{"text":"I feel sad"}'
+
+# API docs
+# Open: http://localhost:8000/docs

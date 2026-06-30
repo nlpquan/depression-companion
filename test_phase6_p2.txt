@@ -1,0 +1,13 @@
+.\venv\Scripts\Activate.ps1
+
+# Install PDF generation
+pip install reportlab
+
+# Test PDF report generation
+python scripts/generate_report.py
+
+# Check deployment readiness
+python scripts/deploy_checklist.py
+
+# Run all tests one final time
+pytest tests/ -v --cov=src --cov-report=html

@@ -50,3 +50,11 @@ Thumbs.db
 
 # Wandb
 wandb/
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Railway
+.railway/
