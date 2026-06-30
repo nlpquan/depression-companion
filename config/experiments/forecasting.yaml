@@ -1,0 +1,55 @@
+# Mood forecasting experiment config
+
+experiment:
+  name: "mood_forecasting"
+  description: "7-day mood trajectory prediction with early warning signals"
+  seed: 42
+
+model:
+  type: "mood_forecaster"
+  input_dim: 10
+  hidden_dim: 128
+  forecast_horizons: [1, 3, 7]
+  num_layers: 2
+  dropout: 0.3
+  bidirectional: true
+
+data:
+  history_length: 14  # Days of history for prediction
+  prediction_horizon: 7  # Days to predict
+  features:
+    - "mood_score"
+    - "sleep_duration"
+    - "sleep_quality"
+    - "physical_activity"
+    - "social_interactions"
+    - "speech_energy"
+    - "negative_sentiment"
+    - "positive_sentiment"
+    - "anxiety_level"
+    - "medication_adherence"
+
+training:
+  batch_size: 32
+  num_epochs: 50
+  learning_rate: 1.0e-3
+  weight_decay: 0.001
+
+early_warning:
+  baseline_window: 14
+  warning_window: 7
+  indicators:
+    sleep_disruption:
+      threshold: 0.3
+      lead_time: 2.0
+    social_withdrawal:
+      threshold: 0.4
+      lead_time: 3.0
+    speech_energy_drop:
+      threshold: 0.35
+      lead_time: 1.5
+
+evaluation:
+  metrics: ["mae", "rmse", "clinical_accuracy"]
+  horizons: [1, 3, 7]
+  confidence_intervals: true

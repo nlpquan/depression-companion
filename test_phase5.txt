@@ -1,0 +1,7 @@
+.\venv\Scripts\Activate.ps1
+
+# Run tests
+pytest tests/unit/test_temporal_model.py tests/unit/test_forecasting.py tests/unit/test_early_warning.py -v
+
+# Run forecasting demo
+python scripts/run_forecasting.py
