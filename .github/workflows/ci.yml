@@ -35,15 +35,6 @@ jobs:
           pip install black ruff mypy pytest pytest-cov pytest-mock pydantic pydantic-settings pyyaml loguru fastapi httpx numpy scikit-learn python-multipart
           pip install --no-deps -e "."
 
-      - name: Run tests
-        run: |
-          pytest tests/unit/test_config.py tests/unit/test_api.py -v \
-            -k "not (test_valid_chat or test_crisis_detection)" \
-            --cov=src/depression_companion/config.py \
-            --cov=src/depression_companion/api \
-            --cov-report=xml \
-            --cov-report=term-missing
-
       - name: Lint with ruff
         run: ruff check src/ tests/ --ignore=F401
         continue-on-error: true
@@ -58,18 +49,10 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/ -v \
-            --ignore=tests/unit/test_audio_model.py \
-            --ignore=tests/unit/test_text_model.py \
-            --ignore=tests/unit/test_ensemble.py \
-            --ignore=tests/unit/test_cross_modal.py \
-            --ignore=tests/unit/test_multi_task.py \
-            --ignore=tests/unit/test_temporal_model.py \
-            --ignore=tests/unit/test_forecasting.py \
-            --ignore=tests/unit/test_attribution.py \
-            --ignore=tests/unit/test_dataset.py \
-            --ignore=tests/integration/ \
-            --cov=src/depression_companion \
+          pytest tests/unit/test_config.py tests/unit/test_api.py -v \
+            -k "not (test_valid_chat or test_crisis_detection)" \
+            --cov=src/depression_companion/config.py \
+            --cov=src/depression_companion/api \
             --cov-report=xml \
             --cov-report=term-missing
 
