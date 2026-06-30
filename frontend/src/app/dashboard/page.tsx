@@ -16,7 +16,7 @@ export default function Dashboard() {
   const analyzeText = async (text: string) => {
     setLoading(true);
     try {
-      const response = await fetch('${API_URL}/api/v1/analyze/text', {
+      const response = await fetch(`${API_URL}/api/v1/analyze/text`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),
