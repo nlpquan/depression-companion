@@ -1,0 +1,14 @@
+# Activate environment
+.\venv\Scripts\Activate.ps1
+
+# Run new tests
+pytest tests/unit/test_cross_modal.py tests/unit/test_multi_task.py tests/unit/test_attribution.py -v
+
+# Run ablation study
+python scripts/run_ablation.py --config config/experiments/cross_modal.yaml
+
+# Generate attention visualizations
+python notebooks/attention_visualization.py
+
+# Run all tests so far
+pytest tests/ -v --cov=src --cov-report=html

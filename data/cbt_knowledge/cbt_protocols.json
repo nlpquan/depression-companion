@@ -1,0 +1,126 @@
+[
+  {
+    "id": "cbt_001",
+    "title": "Cognitive Restructuring",
+    "category": "thought_challenging",
+    "description": "Identify and challenge negative automatic thoughts",
+    "steps": [
+      "Identify the negative thought",
+      "Examine the evidence for and against",
+      "Consider alternative explanations",
+      "Evaluate the real impact",
+      "Develop a balanced thought"
+    ],
+    "example_dialogue": "Therapist: What went through your mind when you felt upset?\nClient: I thought 'I'm a complete failure'\nTherapist: Let's examine the evidence. What are some things you've succeeded at recently?",
+    "suitable_for": ["depression", "anxiety", "low_self_esteem"]
+  },
+  {
+    "id": "cbt_002",
+    "title": "Behavioral Activation",
+    "category": "behavioral",
+    "description": "Increase engagement in positively reinforcing activities",
+    "steps": [
+      "Monitor current activities and mood",
+      "Identify activities that bring pleasure or achievement",
+      "Schedule activities progressively",
+      "Overcome barriers and avoidance",
+      "Review and adjust based on mood impact"
+    ],
+    "example_dialogue": "Therapist: Even small activities can help break the depression cycle. What's one thing you used to enjoy?\nClient: I used to like walking in the park.\nTherapist: Could we schedule a 10-minute walk for tomorrow morning?",
+    "suitable_for": ["depression", "anhedonia"]
+  },
+  {
+    "id": "cbt_003",
+    "title": "Mindfulness and Grounding",
+    "category": "emotion_regulation",
+    "description": "Present-moment awareness techniques for managing distress",
+    "steps": [
+      "Notice 5 things you can see",
+      "Notice 4 things you can feel",
+      "Notice 3 things you can hear",
+      "Notice 2 things you can smell",
+      "Notice 1 thing you can taste"
+    ],
+    "example_dialogue": "Therapist: When you feel overwhelmed, try the 5-4-3-2-1 grounding technique. It helps bring you back to the present moment.",
+    "suitable_for": ["anxiety", "panic", "ptsd", "overwhelm"]
+  },
+  {
+    "id": "cbt_004",
+    "title": "Sleep Hygiene Protocol",
+    "category": "behavioral",
+    "description": "Establish healthy sleep patterns to support mental health",
+    "steps": [
+      "Maintain consistent sleep/wake schedule",
+      "Create a relaxing bedtime routine",
+      "Limit screen time 1 hour before bed",
+      "Avoid caffeine after 2 PM",
+      "Get morning sunlight exposure",
+      "Use bed only for sleep and rest"
+    ],
+    "example_dialogue": "Therapist: Sleep disruption is common with depression. Let's work on a consistent routine. What time could you commit to going to bed each night?",
+    "suitable_for": ["depression", "anxiety", "insomnia"]
+  },
+  {
+    "id": "cbt_005",
+    "title": "Crisis Safety Planning",
+    "category": "safety",
+    "description": "Create a structured plan for managing crisis moments",
+    "steps": [
+      "Recognize personal warning signs",
+      "Internal coping strategies",
+      "People and social settings for distraction",
+      "People to ask for help",
+      "Professionals or agencies to contact",
+      "Making the environment safe"
+    ],
+    "example_dialogue": "Therapist: Let's create a safety plan together. What are some early signs that you're heading toward a crisis?",
+    "suitable_for": ["suicidal_ideation", "self_harm", "crisis"]
+  },
+  {
+    "id": "cbt_006",
+    "title": "Graded Exposure",
+    "category": "behavioral",
+    "description": "Gradually face feared situations to reduce anxiety",
+    "steps": [
+      "Create a fear hierarchy (least to most scary)",
+      "Learn relaxation techniques first",
+      "Start with the easiest item",
+      "Stay in the situation until anxiety drops",
+      "Progress up the hierarchy",
+      "Celebrate each success"
+    ],
+    "example_dialogue": "Therapist: We'll take this one step at a time. What's the smallest, least scary situation we could start with?",
+    "suitable_for": ["anxiety", "phobias", "social_anxiety"]
+  },
+  {
+    "id": "cbt_007",
+    "title": "Values Clarification",
+    "category": "cognitive",
+    "description": "Identify personal values to guide meaningful action",
+    "steps": [
+      "Explore what truly matters to you",
+      "Rate current alignment with values",
+      "Identify gaps between values and actions",
+      "Set small values-based goals",
+      "Track progress and adjust"
+    ],
+    "example_dialogue": "Therapist: When depression lifts, what kind of person do you want to be? What matters most to you?",
+    "suitable_for": ["depression", "life_transitions", "purpose"]
+  },
+  {
+    "id": "cbt_008",
+    "title": "Thought Record",
+    "category": "thought_challenging",
+    "description": "Structured journal for analyzing and reframing thoughts",
+    "steps": [
+      "Describe the situation",
+      "Identify the automatic thought",
+      "Rate the emotion and intensity",
+      "Find evidence against the thought",
+      "Create a balanced alternative",
+      "Re-rate the emotion"
+    ],
+    "example_dialogue": "Therapist: Let's write down exactly what happened and what you thought. Sometimes seeing it on paper helps us challenge it.",
+    "suitable_for": ["depression", "anxiety", "negative_thinking"]
+  }
+]

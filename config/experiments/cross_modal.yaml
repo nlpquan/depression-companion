@@ -1,0 +1,45 @@
+# Experiment: Cross-modal attention ablation study
+
+experiment:
+  name: "cross_modal_ablation"
+  description: "Compare simple concat vs cross-modal attention fusion"
+  seed: 42
+
+model:
+  audio_dim: 768
+  text_dim: 768
+  hidden_dim: 256
+  num_heads: 8
+  num_fusion_layers: 2
+  dropout: 0.1
+
+ablation:
+  variants:
+    - name: "audio_only"
+      description: "Audio features only"
+      use_audio: true
+      use_text: false
+      fusion: null
+    
+    - name: "text_only"
+      description: "Text features only"
+      use_audio: false
+      use_text: true
+      fusion: null
+    
+    - name: "simple_concat"
+      description: "Simple concatenation of audio and text"
+      use_audio: true
+      use_text: true
+      fusion: "concat"
+    
+    - name: "cross_modal_attention"
+      description: "Cross-modal attention fusion"
+      use_audio: true
+      use_text: true
+      fusion: "cross_modal"
+
+evaluation:
+  metrics: ["accuracy", "f1", "auc", "mae"]
+  report_attention_weights: true
+  save_visualizations: true

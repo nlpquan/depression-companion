@@ -1,0 +1,42 @@
+# Experiment: Multi-task learning
+
+experiment:
+  name: "multi_task_depression"
+  description: "Multi-task learning for depression, anxiety, and mood"
+  seed: 42
+
+model:
+  audio_dim: 768
+  text_dim: 768
+  hidden_dim: 256
+  dropout: 0.3
+  use_cross_modal: true
+
+tasks:
+  - name: "depression_classification"
+    type: "classification"
+    num_classes: 2
+    weight: null  # Learned via uncertainty
+    
+  - name: "phq8_regression"
+    type: "regression"
+    weight: null
+    
+  - name: "anxiety_classification"
+    type: "classification"
+    num_classes: 2
+    weight: null
+    
+  - name: "mood_regression"
+    type: "regression"
+    weight: null
+
+training:
+  batch_size: 16
+  num_epochs: 20
+  learning_rate: 1.0e-4
+  weight_decay: 0.01
+
+evaluation:
+  per_task_metrics: true
+  compare_single_task: true  # Compare vs single-task baselines
