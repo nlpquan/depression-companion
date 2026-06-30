@@ -14,19 +14,19 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   const analyzeText = async (text: string) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/api/v1/analyze/text`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
-      });
-      const data = await response.json();
-      setAnalysis(data);
-    } catch (error) {
-      console.error('Analysis failed:', error);
-    }
-    setLoading(false);
+    // setLoading(true);
+    // try {
+    //   const response = await fetch(`${API_URL}/api/v1/analyze/text`, {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ text }),
+    //   });
+    //   const data = await response.json();
+    //   setAnalysis(data);
+    // } catch (error) {
+    //   console.error('Analysis failed:', error);
+    // }
+    // setLoading(false);
   };
 
   return (
