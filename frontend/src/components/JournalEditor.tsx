@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 interface Props {
-  onAnalyze: (text: string) => void;
+  onAnalyze: (text: string, data?: any) => void;
   loading: boolean;
 }
 
@@ -21,8 +21,6 @@ export default function JournalEditor({ onAnalyze, loading }: Props) {
 
   const handleAnalyze = async () => {
     if (text.trim()) {
-      onAnalyze(text);
-      // Also call the API directly
       try {
         const res = await fetch(`${API_URL}/api/v1/analyze/text`, {
           method: 'POST',
@@ -31,6 +29,7 @@ export default function JournalEditor({ onAnalyze, loading }: Props) {
         });
         const data = await res.json();
         console.log('Analysis:', data);
+        onAnalyze(text, data);
       } catch (err) {
         console.error('API error:', err);
       }

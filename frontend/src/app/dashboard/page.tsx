@@ -13,21 +13,12 @@ export default function Dashboard() {
   const [analysis, setAnalysis] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  const analyzeText = async (text: string) => {
-    // setLoading(true);
-    // try {
-    //   const response = await fetch(`${API_URL}/api/v1/analyze/text`, {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ text }),
-    //   });
-    //   const data = await response.json();
-    //   setAnalysis(data);
-    // } catch (error) {
-    //   console.error('Analysis failed:', error);
-    // }
-    // setLoading(false);
-  };
+  const analyzeText = async (text: string, data?: any) => {
+    if (data) {
+      setAnalysis(data);
+    }
+    setLoading(false);
+};
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">

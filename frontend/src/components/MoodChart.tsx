@@ -13,9 +13,10 @@ import {
   AreaChart,
 } from 'recharts';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 export default function MoodChart() {
   const [forecast, setForecast] = useState<any>(null);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/forecast/demo-user`)
@@ -24,7 +25,7 @@ export default function MoodChart() {
       .catch(console.error);
   }, []);
 
-  if (!forecast) {
+  if (!forecast || !forecast.trajectory) {
     return (
       <div className="bg-white rounded-xl shadow-sm p-6">
         <p className="text-gray-500">Loading forecast...</p>
