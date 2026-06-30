@@ -1,0 +1,24 @@
+# RAG system configuration
+
+experiment:
+  name: "cbt_rag_system"
+  description: "RAG system with CBT knowledge base"
+
+retrieval:
+  method: "chromadb"  # Options: simple, chromadb
+  embedding_model: "all-MiniLM-L6-v2"
+  top_k: 3
+  similarity_threshold: 0.5
+  persist_directory: "data/chroma_db"
+
+generation:
+  model: "mistralai/Mistral-7B-v0.1"
+  max_new_tokens: 256
+  temperature: 0.7
+  top_p: 0.9
+  use_rag: true
+
+safety:
+  enabled: true
+  crisis_threshold: 2  # Severity level for crisis intervention
+  filter_responses: true

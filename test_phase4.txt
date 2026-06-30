@@ -1,0 +1,26 @@
+.\venv\Scripts\Activate.ps1
+
+# Install ChromaDB (optional - for production vector search)
+pip install chromadb sentence-transformers
+
+# Run tests
+pytest tests/unit/test_safety_classifier.py tests/unit/test_retriever.py -v
+
+# Test RAG system manually
+python -c "
+from depression_companion.rag.knowledge_base import CBTKnowledgeBase
+from depression_companion.rag.retriever import SimpleRetriever
+from depression_companion.rag.generator import RAGGenerator
+
+kb = CBTKnowledgeBase('data/cbt_knowledge/cbt_protocols.json')
+retriever = SimpleRetriever(kb)
+generator = RAGGenerator(retriever)
+
+# Test safe message
+result = generator.generate('I have been feeling really down and hopeless')
+print('Safe response:', result['response'][:100])
+
+# Test crisis message
+crisis = generator.generate('I want to end my life')
+print('Crisis response:', crisis['response'][:100])
+"

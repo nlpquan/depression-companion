@@ -1,0 +1,36 @@
+# Experiment: QLoRA fine-tuning of Mistral-7B
+
+experiment:
+  name: "mistral_mental_health"
+  description: "Fine-tune Mistral-7B on mental health conversations with QLoRA"
+  seed: 42
+
+model:
+  base_model: "mistralai/Mistral-7B-v0.1"
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  bits: 4
+  double_quant: true
+  quant_type: "nf4"
+
+data:
+  max_length: 2048
+  train_split: 0.8
+  sources:
+    - "esconv"
+    - "cbt_transcripts"
+    - "mental_health_reddit"
+
+training:
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  num_epochs: 3
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.03
+  weight_decay: 0.001
+  max_grad_norm: 0.3
+  
+evaluation:
+  metrics: ["perplexity", "clinical_accuracy", "empathy_score", "safety_compliance"]
+  human_eval: false
