@@ -3,6 +3,8 @@
 import time
 import datetime
 import uuid
+import os
+import requests
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -27,6 +29,9 @@ router = APIRouter()
 # Store active WebSocket connections
 active_connections: dict[str, WebSocket] = {}
 
+# HuggingFace Inference API (free tier: 30K requests/month)
+HF_TOKEN = os.getenv("HF_TOKEN", "")  # GOOD - reads from Railway env var
+SENTIMENT_API = "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment-latest"
 
 @router.get("/health", response_model=HealthCheckResponse)
 async def health_check() -> HealthCheckResponse:
@@ -41,32 +46,14 @@ async def health_check() -> HealthCheckResponse:
 
 @router.post("/analyze/text", response_model=AnalysisResponse)
 async def analyze_text(request: TextAnalysisRequest) -> AnalysisResponse:
-    """Analyze text for depression indicators.
-    
-    Args:
-        request: Text analysis request.
-        
-    Returns:
-        Analysis response with scores.
-    """
     start_time = time.time()
     analysis_id = str(uuid.uuid4())
     
     try:
-        # This would call the pipeline in production
-        # For now, return mock analysis
         logger.info(f"Analyzing text: {len(request.text)} chars")
         
-        # Mock scores based on text length and content
-        text_lower = request.text.lower()
-        
-        # Simple heuristic for demo
-        depression_indicators = sum(
-            1 for word in ["sad", "depressed", "hopeless", "tired", "worthless"]
-            if word in text_lower
-        )
-        
-        depression_score = min(0.3 + depression_indicators * 0.15, 0.95)
+        # Real ML analysis with fallback
+        scores = await _real_text_analysis(request.text)
         
         processing_time = (time.time() - start_time) * 1000
         
@@ -74,15 +61,16 @@ async def analyze_text(request: TextAnalysisRequest) -> AnalysisResponse:
             id=analysis_id,
             timestamp=datetime.now(timezone.utc),
             scores=DepressionScores(
-                depression_score=depression_score,
-                anxiety_score=depression_score * 0.8,
-                mood_score=1.0 - depression_score,
-                confidence=0.75,
+                depression_score=scores["depression"],
+                anxiety_score=scores["anxiety"],
+                mood_score=scores["mood"],
+                confidence=scores.get("confidence", 0.75),
             ),
             processing_time_ms=processing_time,
             features_extracted={
                 "word_count": len(request.text.split()),
                 "char_count": len(request.text),
+                "model": scores.get("model", "heuristic"),
             },
             warnings=[],
         )
@@ -167,7 +155,7 @@ async def analyze_multimodal(
     
     try:
         # Process both modalities
-        text_scores = await _mock_text_analysis(request.text)
+        text_scores = await _real_text_analysis(request.text)
         
         audio_scores = None
         if file:
@@ -344,18 +332,78 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
         active_connections.pop(user_id, None)
 
 
-# ---- Mock analysis functions ----
+# ---- Real analysis functions ----
 
-async def _mock_text_analysis(text: str) -> dict:
-    """Mock text analysis for development."""
+async def _real_text_analysis(text: str) -> dict:
+    """Real sentiment analysis via HuggingFace Inference API.
+    
+    Falls back to heuristic if API is unavailable.
+    """
+    if not HF_TOKEN:
+        logger.warning("HF_TOKEN not set, using mock analysis")
+        return _heuristic_text_analysis(text)
+    
+    try:
+        headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+        payload = {"inputs": text[:500]}
+        
+        response = requests.post(SENTIMENT_API, headers=headers, json=payload, timeout=10)
+        response.raise_for_status()
+        result = response.json()
+        
+        # Parse sentiment scores: labels are LABEL_0 (negative), LABEL_1 (neutral), LABEL_2 (positive)
+        sentiment_map = {}
+        for item in result[0]:
+            label = item["label"].lower()
+            sentiment_map[label] = item["score"]
+        
+        negative_score = sentiment_map.get("negative", sentiment_map.get("label_0", 0.0))
+        positive_score = sentiment_map.get("positive", sentiment_map.get("label_2", 0.0))
+        
+        # Map to depression/anxiety/mood
+        depression_score = round(negative_score, 2)
+        anxiety_score = round(negative_score * 0.85, 2)
+        mood_score = round(positive_score, 2)
+        
+        logger.info(f"Real analysis: depression={depression_score}, mood={mood_score}")
+        
+        return {
+            "depression": depression_score,
+            "anxiety": anxiety_score,
+            "mood": mood_score,
+            "confidence": max(sentiment_map.values()) if sentiment_map else 0.5,
+            "model": "roberta-sentiment",
+        }
+        
+    except Exception as e:
+        logger.warning(f"HF API failed, falling back to heuristic: {e}")
+        return _heuristic_text_analysis(text)
+
+
+def _heuristic_text_analysis(text: str) -> dict:
+    """Keyword-based fallback analysis."""
     text_lower = text.lower()
-    depression_words = sum(
-        1 for word in ["sad", "depressed", "hopeless", "tired", "worthless", "down"]
-        if word in text_lower
-    )
+    
+    depression_keywords = {
+        "hopeless": 0.25, "worthless": 0.25, "suicidal": 0.35,
+        "tired": 0.1, "exhausted": 0.15, "lonely": 0.15,
+        "anxious": 0.15, "overwhelmed": 0.15, "numb": 0.2,
+        "crying": 0.15, "struggling": 0.1, "pain": 0.15,
+        "dark": 0.1, "empty": 0.15, "sad": 0.1,
+        "depressed": 0.2, "down": 0.1, "terrible": 0.15,
+    }
+    
+    depression_score = 0.1
+    for word, weight in depression_keywords.items():
+        if word in text_lower:
+            depression_score += weight
+    
+    depression_score = min(depression_score, 0.95)
+    
     return {
-        "depression": min(0.3 + depression_words * 0.12, 0.95),
-        "anxiety": min(0.2 + depression_words * 0.1, 0.9),
+        "depression": round(depression_score, 2),
+        "anxiety": round(depression_score * 0.85, 2),
+        "mood": round(1.0 - depression_score, 2),
     }
 
 
