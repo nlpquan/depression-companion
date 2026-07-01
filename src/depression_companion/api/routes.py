@@ -31,7 +31,7 @@ active_connections: dict[str, WebSocket] = {}
 
 # HuggingFace Inference API (free tier: 30K requests/month)
 HF_TOKEN = os.getenv("HF_TOKEN", "")  # GOOD - reads from Railway env var
-SENTIMENT_API = "https://router.huggingface.co/hf-inference/models/cardiffnlp/twitter-roberta-base-sentiment-latest"
+SENTIMENT_API = "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english"
 
 @router.get("/health", response_model=HealthCheckResponse)
 async def health_check() -> HealthCheckResponse:
